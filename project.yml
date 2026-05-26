@@ -1,0 +1,72 @@
+name: SnapTag
+options:
+  bundleIdPrefix: com.ozspidey
+  deploymentTarget:
+    iOS: "16.0"
+  xcodeVersion: "15.0"
+  createIntermediateGroups: true
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    ENABLE_STRICT_CONCURRENCY_CHECKING: complete
+    OTHER_SWIFT_FLAGS: "-strict-concurrency=complete"
+    TARGETED_DEVICE_FAMILY: "1"
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: "1"
+    INFOPLIST_FILE: SnapTag/Resources/Info.plist
+
+targets:
+  SnapTag:
+    type: application
+    platform: iOS
+    sources:
+      - path: SnapTag
+        excludes:
+          - "**/*.md"
+    resources:
+      - path: SnapTag/Resources/Assets.xcassets
+    info:
+      path: SnapTag/Resources/Info.plist
+      properties:
+        NSCameraUsageDescription: "SnapTag uses the camera to classify scenes and detect objects in real time."
+        NSPhotoLibraryUsageDescription: "SnapTag accesses your photo library to analyze selected images."
+        UILaunchScreen: {}
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.ozspidey.SnapTag
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        DEVELOPMENT_ASSET_PATHS: "SnapTag/Resources/Preview Content"
+
+  SnapTagTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - SnapTagTests
+    dependencies:
+      - target: SnapTag
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.ozspidey.SnapTagTests
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/SnapTag.app/SnapTag"
+
+schemes:
+  SnapTag:
+    build:
+      targets:
+        SnapTag: all
+        SnapTagTests: [test]
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - name: SnapTagTests
+          parallelizable: true
+          randomExecutionOrder: true
+      commandLineArguments:
+        "-com.apple.CoreData.ConcurrencyDebug": "1"
+    archive:
+      config: Release
