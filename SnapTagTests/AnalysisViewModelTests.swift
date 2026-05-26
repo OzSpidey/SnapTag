@@ -2,7 +2,6 @@ import XCTest
 import Combine
 @testable import SnapTag
 
-@MainActor
 final class AnalysisViewModelTests: XCTestCase {
 
     private var mockService: MockVisionService!

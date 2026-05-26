@@ -57,10 +57,21 @@ final class ResultCacheTests: XCTestCase {
         expectation.expectedFulfillmentCount = 100
 
         DispatchQueue.concurrentPerform(iterations: 100) { iteration in
-            let image = self.makeImage(color: UIColor(red: CGFloat(iteration % 10) / 10, green: 0, blue: 0, alpha: 1),
-                                       size: CGSize(width: iteration + 1, height: iteration + 1))
+            // Inline image + result creation to avoid capturing self in @Sendable closure.
+            let renderer = UIGraphicsImageRenderer(size: CGSize(width: iteration + 1, height: iteration + 1))
+            let image = renderer.image { ctx in
+                UIColor(red: CGFloat(iteration % 10) / 10, green: 0, blue: 0, alpha: 1).setFill()
+                ctx.fill(CGRect(x: 0, y: 0, width: iteration + 1, height: iteration + 1))
+            }
             let hash = ImageHash(image)
-            cache.store(self.makeResult(hash: hash), for: hash)
+            let result = AnalysisResult(
+                imageHash: hash,
+                sceneLabels: [SceneLabel(identifier: "test", confidence: 0.9)],
+                detectedObjects: [],
+                processingTime: 0.1,
+                status: .completed
+            )
+            cache.store(result, for: hash)
             _ = cache.result(for: hash)
             expectation.fulfill()
         }

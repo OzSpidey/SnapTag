@@ -66,7 +66,7 @@ final class ImageAnalyzerTests: XCTestCase {
     }
 
     func test_analyzeBatch_partialFailure_countIsAccurate() async {
-        var callCount = 0
+        let callCount = 0
         mockService.classifyResult = .success([])
 
         // Alternate success/failure using a fresh service with custom logic
@@ -92,12 +92,12 @@ final class ImageAnalyzerTests: XCTestCase {
 
     func test_analyzeBatch_progressCallbacks_countUpToTotal() async {
         let images = (0..<5).map { _ in makeImage(color: .purple) }
-        var progressValues: [BatchProgress] = []
+        let collector = ProgressCollector()
         let (_, _, _) = await sut.analyzeBatch(images) { progress in
-            progressValues.append(progress)
+            collector.append(progress)
         }
-        XCTAssertEqual(progressValues.last?.completed, images.count)
-        XCTAssertEqual(progressValues.last?.total, images.count)
+        XCTAssertEqual(collector.last?.completed, images.count)
+        XCTAssertEqual(collector.last?.total, images.count)
     }
 
     // MARK: - Helpers
@@ -108,5 +108,21 @@ final class ImageAnalyzerTests: XCTestCase {
             color.setFill()
             ctx.fill(CGRect(origin: .zero, size: size))
         }
+    }
+}
+
+// MARK: - Thread-safe progress collector
+
+/// NSLock-protected accumulator for @Sendable progress callbacks.
+private final class ProgressCollector: @unchecked Sendable {
+    private let lock = NSLock()
+    private var storage: [BatchProgress] = []
+
+    func append(_ progress: BatchProgress) {
+        lock.withLock { storage.append(progress) }
+    }
+
+    var last: BatchProgress? {
+        lock.withLock { storage.last }
     }
 }
