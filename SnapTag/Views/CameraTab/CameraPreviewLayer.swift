@@ -22,6 +22,8 @@ struct CameraPreviewLayer: UIViewRepresentable {
 
     final class PreviewView: UIView {
         override class var layerClass: AnyClass { AVCaptureVideoPreviewLayer.self }
+        // layerClass guarantees this cast is always safe.
+        // swiftlint:disable:next force_cast
         var previewLayer: AVCaptureVideoPreviewLayer { layer as! AVCaptureVideoPreviewLayer }
 
         override func layoutSubviews() {

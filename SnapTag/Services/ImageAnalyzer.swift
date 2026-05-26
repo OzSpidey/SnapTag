@@ -87,8 +87,8 @@ final class ImageAnalyzer: Sendable {
             for await (index, outcome) in group {
                 completed += 1
                 switch outcome {
-                case .success(let r):
-                    ordered[index] = r
+                case .success(let analysisResult):
+                    ordered[index] = analysisResult
                     succeeded += 1
                 case .failure:
                     failed += 1

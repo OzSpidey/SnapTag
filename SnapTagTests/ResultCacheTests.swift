@@ -28,21 +28,21 @@ final class ResultCacheTests: XCTestCase {
     }
 
     func test_samePixelContent_producesSameHash() {
-        let a = makeImage(color: .red, size: CGSize(width: 50, height: 50))
-        let b = makeImage(color: .red, size: CGSize(width: 50, height: 50))
-        XCTAssertEqual(ImageHash(a).value, ImageHash(b).value)
+        let imageA = makeImage(color: .red, size: CGSize(width: 50, height: 50))
+        let imageB = makeImage(color: .red, size: CGSize(width: 50, height: 50))
+        XCTAssertEqual(ImageHash(imageA).value, ImageHash(imageB).value)
     }
 
     func test_differentImages_produceDifferentHashes() {
-        let a = makeImage(color: .red)
-        let b = makeImage(color: .blue)
-        XCTAssertNotEqual(ImageHash(a).value, ImageHash(b).value)
+        let imageA = makeImage(color: .red)
+        let imageB = makeImage(color: .blue)
+        XCTAssertNotEqual(ImageHash(imageA).value, ImageHash(imageB).value)
     }
 
     func test_evictAll_clearsAllEntries() {
-        for i in 0..<5 {
-            let image = makeImage(color: UIColor(red: CGFloat(i) / 5, green: 0, blue: 0, alpha: 1),
-                                  size: CGSize(width: i + 10, height: i + 10))
+        for index in 0..<5 {
+            let image = makeImage(color: UIColor(red: CGFloat(index) / 5, green: 0, blue: 0, alpha: 1),
+                                  size: CGSize(width: index + 10, height: index + 10))
             let hash = ImageHash(image)
             sut.store(makeResult(hash: hash), for: hash)
         }
@@ -56,9 +56,9 @@ final class ResultCacheTests: XCTestCase {
         let expectation = expectation(description: "concurrent access")
         expectation.expectedFulfillmentCount = 100
 
-        DispatchQueue.concurrentPerform(iterations: 100) { i in
-            let image = self.makeImage(color: UIColor(red: CGFloat(i % 10) / 10, green: 0, blue: 0, alpha: 1),
-                                       size: CGSize(width: i + 1, height: i + 1))
+        DispatchQueue.concurrentPerform(iterations: 100) { iteration in
+            let image = self.makeImage(color: UIColor(red: CGFloat(iteration % 10) / 10, green: 0, blue: 0, alpha: 1),
+                                       size: CGSize(width: iteration + 1, height: iteration + 1))
             let hash = ImageHash(image)
             cache.store(self.makeResult(hash: hash), for: hash)
             _ = cache.result(for: hash)

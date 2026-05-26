@@ -83,7 +83,7 @@ final class ImageAnalyzerTests: XCTestCase {
         let service = AlternatingService()
         let cache   = MockResultCache()
         let analyzer = ImageAnalyzer(visionService: service, cache: cache)
-        let images  = (0..<4).map { i in makeImage(color: .init(white: CGFloat(i) / 4, alpha: 1), size: CGSize(width: i + 5, height: i + 5)) }
+        let images  = (0..<4).map { idx in makeImage(color: .init(white: CGFloat(idx) / 4, alpha: 1), size: CGSize(width: idx + 5, height: idx + 5)) }
 
         let (_, succeeded, failed) = await analyzer.analyzeBatch(images)
         XCTAssertEqual(succeeded + failed, images.count)

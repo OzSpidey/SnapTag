@@ -1,0 +1,51 @@
+included:
+  - SnapTag
+  - SnapTagTests
+
+excluded:
+  - SnapTag/Resources
+
+disabled_rules:
+  - trailing_whitespace
+
+opt_in_rules:
+  - empty_count
+  - explicit_init
+  - closure_spacing
+  - overridden_super_call
+
+identifier_name:
+  min_length:
+    warning: 2
+    error: 2
+  excluded:
+    - id
+    - vm
+    - ok
+    - dx
+    - dy
+
+line_length:
+  warning: 140
+  error: 200
+  ignores_comments: true
+  ignores_urls: true
+
+type_body_length:
+  warning: 300
+  error: 400
+
+file_length:
+  warning: 500
+  error: 800
+
+function_body_length:
+  warning: 60
+  error: 100
+
+large_tuple:
+  warning: 4
+  error: 5
+
+force_cast: warning
+force_try: warning
