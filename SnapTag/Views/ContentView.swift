@@ -22,7 +22,7 @@ struct ContentView: View {
         )) { wrapper in
             Alert(
                 title: Text("Analysis Error"),
-                message: Text(wrapper.error.localizedDescription ?? "Unknown error"),
+                message: Text(wrapper.error.localizedDescription),
                 dismissButton: .default(Text("OK"))
             )
         }
@@ -33,5 +33,5 @@ struct ContentView: View {
 
 private struct AlertWrapper: Identifiable {
     let error: SnapTagError
-    var id: String { error.localizedDescription ?? "error" }
+    var id: String { error.localizedDescription }
 }

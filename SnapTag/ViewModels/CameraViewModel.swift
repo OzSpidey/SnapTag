@@ -10,6 +10,7 @@ final class CameraViewModel: ObservableObject {
     @Published private(set) var liveResult: AnalysisResult?
     @Published private(set) var permissionState: CameraPermissionState = .notDetermined
     @Published private(set) var isSessionRunning: Bool = false
+    @Published private(set) var captureSession: AVCaptureSession?
     @Published var errorAlert: SnapTagError?
 
     let cameraSession: CameraSession
@@ -46,6 +47,7 @@ final class CameraViewModel: ObservableObject {
         do {
             try await cameraSession.configure()
             await cameraSession.start()
+            captureSession = await cameraSession.captureSession
             isSessionRunning = true
         } catch {
             errorAlert = error as? SnapTagError ?? .visionRequestFailed(underlying: error)

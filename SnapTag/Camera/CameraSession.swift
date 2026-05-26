@@ -8,7 +8,9 @@ actor CameraSession: NSObject {
     // MARK: Public interface
 
     /// Emits each captured frame. Subscribers should throttle on their own scheduler.
-    let framePublisher = PassthroughSubject<CMSampleBuffer, Never>()
+    /// Marked nonisolated because PassthroughSubject is @unchecked Sendable and the
+    /// delegate callback already runs off the actor on the capture queue.
+    nonisolated let framePublisher = PassthroughSubject<CMSampleBuffer, Never>()
 
     private(set) var captureSession: AVCaptureSession?
     private(set) var isRunning: Bool = false

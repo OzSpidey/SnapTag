@@ -24,7 +24,7 @@ struct CameraView: View {
             set: { if $0 == nil { vm.errorAlert = nil } }
         )) { wrapper in
             Alert(title: Text("Camera Error"),
-                  message: Text(wrapper.error.localizedDescription ?? ""),
+                  message: Text(wrapper.error.localizedDescription),
                   dismissButton: .default(Text("OK")))
         }
     }
@@ -46,7 +46,7 @@ struct CameraView: View {
     private var liveView: some View {
         GeometryReader { geo in
             ZStack {
-                if let session = await vm.cameraSession.captureSession {
+                if let session = vm.captureSession {
                     CameraPreviewLayer(session: session)
                 }
 
@@ -112,5 +112,5 @@ struct CameraView: View {
 
 private struct AlertWrapper: Identifiable {
     let error: SnapTagError
-    var id: String { error.localizedDescription ?? "error" }
+    var id: String { error.localizedDescription }
 }

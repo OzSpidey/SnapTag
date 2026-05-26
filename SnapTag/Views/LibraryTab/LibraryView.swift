@@ -56,7 +56,7 @@ struct LibraryView: View {
             .sheet(isPresented: $showPicker) {
                 PhotoPicker(selectedImages: $selectedImages)
             }
-            .onChange(of: selectedImages) { _, images in
+            .onChange(of: selectedImages) { images in
                 guard !images.isEmpty else { return }
                 if images.count == 1 {
                     displayedImage = images[0]

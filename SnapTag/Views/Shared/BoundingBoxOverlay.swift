@@ -58,7 +58,7 @@ struct BoundingBoxOverlay: View {
             height: textSize.height + padding * 2
         )
         // Badge background
-        var bgCtx = context
+        let bgCtx = context
         bgCtx.fill(Path(roundedRect: badgeRect, cornerRadius: 3), with: .color(color))
         // Badge text
         context.draw(resolved, at: CGPoint(
